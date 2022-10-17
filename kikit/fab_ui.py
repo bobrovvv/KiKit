@@ -1,5 +1,6 @@
 import click
 
+
 def fabCommand(f):
     """
     A decorator to add the same functionality to all fab commands
@@ -100,6 +101,27 @@ def oshpark(**kwargs):
         sys.stderr.write("No output files produced\n")
         sys.exit(1)
 
+@click.command()
+@fabCommand
+@click.option("--assembly/--no-assembly", help="Generate files for SMT assembly (schematics is required)")
+@click.option("--schematic", type=click.Path(dir_okay=False), help="Board schematics (required for assembly files)")
+@click.option("--ignore", type=str, default="", help="Comma separated list of designators to exclude from SMT assembly")
+def rezonit(**kwargs):
+    """
+    Prepare fabrication files for Rezonit
+    """
+    from kikit.fab import rezonit
+    from kikit.common import fakeKiCADGui
+    app = fakeKiCADGui()
+
+    try:
+        return rezonit.exportRezonit(**kwargs)
+    except Exception as e:
+        import sys
+        sys.stderr.write("An error occurred: " + str(e) + "\n")
+        sys.stderr.write("No output files produced\n")
+        sys.exit(1)
+
 
 @click.group()
 def fab():
@@ -111,3 +133,5 @@ def fab():
 fab.add_command(jlcpcb)
 fab.add_command(pcbway)
 fab.add_command(oshpark)
+fab.add_command(rezonit)
+
