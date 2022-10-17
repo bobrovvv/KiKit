@@ -334,5 +334,5 @@ def renderBoardsExport(board, outputDirectory):
         boardBackRend = os.path.join(dirPrefix, boardName + "render-back.png")
         subprocess.check_call([pcbdraw, "plot", "--vcuts", "Cmts_User", "--silent", "--side", "front", board, os.path.join(outputDirectory, boardFront)])
         subprocess.check_call([pcbdraw, "plot",  "--vcuts", "Cmts_User", "--silent", "--side", "back", board, os.path.join(outputDirectory, boardBack)])
-       # subprocess.check_call([pcbdraw, "render", "--renderer", "normal", "--projection", "orthographic", "--transparent", "--side", "front", board, os.path.join(outputDirectory, boardFrontRend)])
-       # subprocess.check_call([pcbdraw, "render",  "--renderer", "normal", "--projection", "orthographic", "--transparent", "--side", "back", board, os.path.join(outputDirectory, boardBackRend)])
+        subprocess.check_call([pcbdraw, "render", "--renderer", "normal", "--projection", "orthographic", "--transparent", "--side", "front", board, os.path.join(outputDirectory, boardFrontRend)])
+        subprocess.check_call([pcbdraw, "render",  "--renderer", "normal", "--projection", "orthographic", "--transparent", "--side", "back", board, os.path.join(outputDirectory, boardBackRend)])
