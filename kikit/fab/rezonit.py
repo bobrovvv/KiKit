@@ -1,9 +1,6 @@
-from tkinter.messagebox import NO
-import click
 from pcbnewTransition import pcbnew, isV6
 import csv
 import os
-import sys
 from pathlib import Path
 import shutil
 from kikit.fab.common import *

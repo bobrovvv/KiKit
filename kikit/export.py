@@ -311,6 +311,17 @@ def reviewFilesExport(boardfile, outputdir):
         pctl.OpenPlotfile(name, PLOT_FORMAT_PDF, comment)
         if pctl.PlotLayer() == False:
             print("plot error")
+
+    if hasCopper(plot_plan):
+    #generate internal copper layers, if any
+        lyrcnt = board.GetCopperLayerCount()
+        for innerlyr in range (1, lyrcnt - 1):
+            popt.SetSkipPlotNPTH_Pads(True)
+            pctl.SetLayer(innerlyr)
+            pctl.OpenPlotfile('inner{}'.format(innerlyr), PLOT_FORMAT_PDF, "inner")
+            if pctl.PlotLayer() == False:
+                print("plot error")
+
     pctl.ClosePlot()
 
 def renderBoardsExport(board, outputDirectory):
@@ -330,9 +341,9 @@ def renderBoardsExport(board, outputDirectory):
 
         boardFront = os.path.join(dirPrefix, boardName + "-front.png")
         boardBack = os.path.join(dirPrefix, boardName + "-back.png")
-        boardFrontRend = os.path.join(dirPrefix, boardName + "render-front.png")
-        boardBackRend = os.path.join(dirPrefix, boardName + "render-back.png")
+        # boardFrontRend = os.path.join(dirPrefix, boardName + "render-front.png")
+        # boardBackRend = os.path.join(dirPrefix, boardName + "render-back.png")
         subprocess.check_call([pcbdraw, "plot", "--vcuts", "Cmts_User", "--silent", "--side", "front", board, os.path.join(outputDirectory, boardFront)])
         subprocess.check_call([pcbdraw, "plot",  "--vcuts", "Cmts_User", "--silent", "--side", "back", board, os.path.join(outputDirectory, boardBack)])
-        subprocess.check_call([pcbdraw, "render", "--renderer", "normal", "--projection", "orthographic", "--transparent", "--side", "front", board, os.path.join(outputDirectory, boardFrontRend)])
-        subprocess.check_call([pcbdraw, "render",  "--renderer", "normal", "--projection", "orthographic", "--transparent", "--side", "back", board, os.path.join(outputDirectory, boardBackRend)])
+        # subprocess.check_call([pcbdraw, "render", "--renderer", "normal", "--projection", "orthographic", "--transparent", "--side", "front", board, os.path.join(outputDirectory, boardFrontRend)])
+        # subprocess.check_call([pcbdraw, "render",  "--renderer", "normal", "--projection", "orthographic", "--transparent", "--side", "back", board, os.path.join(outputDirectory, boardBackRend)])

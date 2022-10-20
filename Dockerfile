@@ -13,12 +13,19 @@ RUN apt-get update && \
 
 RUN add-apt-repository --yes ppa:kicad/kicad-6.0-releases
 
+RUN add-apt-repository --yes ppa:inkscape.dev/stable
+
+RUN add-apt-repository --yes universe && \
+    apt-get update && \
+    apt install -y inkscape
+
 RUN export DEBIAN_FRONTEND="noninteractive" && apt-get -qq update && \
     apt-get -qq install -y --no-install-recommends \
-      kicad kicad-libraries zip inkscape make git libmagickwand-dev \
+      kicad kicad-libraries zip make git libmagickwand-dev \
       python3 $ADDITIONAL_PYTHON_PACKAGES python3-pip python3-wheel python3-setuptools inkscape \
       libgraphicsmagick1-dev libmagickcore-dev openscad && \
       rm -rf /var/lib/apt/lists/*
+
 
 # hack: manually install Python dependencies to speed up the build process
 # for repetitive builds
