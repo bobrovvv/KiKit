@@ -25,7 +25,8 @@ def execute(fab, kwargs):
         return fab(**kwargs)
     except Exception as e:
         import sys
-        sys.stderr.write(f"An error occurred: {e}\n")
+        import traceback
+        sys.stderr.write(f"An error occurred: {traceback.format_exc()}\n")
         sys.stderr.write("No output files produced\n")
         if debug:
             raise e from None
@@ -114,14 +115,7 @@ def rezonit(**kwargs):
     from kikit.fab import rezonit
     from kikit.common import fakeKiCADGui
     app = fakeKiCADGui()
-
-    try:
-        return rezonit.exportRezonit(**kwargs)
-    except Exception as e:
-        import sys
-        sys.stderr.write("An error occurred: " + str(e) + "\n")
-        sys.stderr.write("No output files produced\n")
-        sys.exit(1)
+    return  execute(rezonit.exportRezonit, kwargs)
 
 
 @click.group()

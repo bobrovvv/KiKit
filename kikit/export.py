@@ -276,7 +276,7 @@ def assemblyDrawingExport(boardfile, outputdir):
     popt.SetPlotFrameRef(True)
     #popt.SetScale(1)
     popt.SetMirror(False)
-    popt.SetExcludeEdgeLayer(False)
+    setExcludeEdgeLayer(popt, False)
 
     plot_plan = [
         # name, id, comment
@@ -313,7 +313,7 @@ def reviewFilesExport(boardfile, outputdir):
     popt.SetPlotFrameRef(False)
     popt.SetScale(1)
     popt.SetMirror(False)
-    popt.SetExcludeEdgeLayer(False)
+    setExcludeEdgeLayer(popt, False)
 
     plot_plan = rezonitGerberPlotPlan
 
