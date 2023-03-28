@@ -6,7 +6,9 @@ import subprocess
 import tempfile
 import shutil
 from pathlib import Path
-from pcbnew import *
+from pcbnewTransition.pcbnew import *
+
+from kikit.defs import Layer
 
 rezonitGerberPlotPlan = [
     # name, id, comment
@@ -93,6 +95,15 @@ def hasCopper(plotPlan):
             return True
     return False
 
+def setExcludeEdgeLayer(plotOptions, excludeEdge):
+    try:
+        plotOptions.SetExcludeEdgeLayer(excludeEdge)
+    except AttributeError:
+        if excludeEdge:
+            plotOptions.SetLayerSelection(LSET())
+        else:
+            plotOptions.SetLayerSelection(LSET(Layer.Edge_Cuts))
+
 def gerberImpl(boardfile, outputdir, plot_plan=fullGerberPlotPlan, drilling=True, settings=exportSettingsJlcpcb):
     """
     Export board to gerbers.
@@ -122,7 +133,7 @@ def gerberImpl(boardfile, outputdir, plot_plan=fullGerberPlotPlan, drilling=True
     popt.SetIncludeGerberNetlistInfo(True)
     popt.SetCreateGerberJobFile(settings["CreateGerberJobFile"])
     popt.SetUseGerberProtelExtensions(settings["UseGerberProtelExtensions"])
-    popt.SetExcludeEdgeLayer(settings["ExcludeEdgeLayer"])
+    setExcludeEdgeLayer(popt, settings["ExcludeEdgeLayer"])
     popt.SetScale(1)
     popt.SetUseAuxOrigin(settings["UseAuxOrigin"])
     popt.SetUseGerberX2format(settings["SetUseGerberX2format"])
@@ -130,7 +141,7 @@ def gerberImpl(boardfile, outputdir, plot_plan=fullGerberPlotPlan, drilling=True
 
     # This by gerbers only
     popt.SetSubtractMaskFromSilk(False)
-    popt.SetDrillMarksType(PCB_PLOT_PARAMS.NO_DRILL_SHAPE)
+    popt.SetDrillMarksType(pcbnew.DRILL_MARKS_NO_DRILL_SHAPE)
     popt.SetSkipPlotNPTH_Pads(False)
 
     # prepare the gerber job file
@@ -176,7 +187,7 @@ def gerberImpl(boardfile, outputdir, plot_plan=fullGerberPlotPlan, drilling=True
         if settings["UseAuxOrigin"]:
             offset = board.GetDesignSettings().GetAuxOrigin()
         else:
-            offset = wxPoint(0,0)
+            offset = VECTOR2I(0, 0)
 
         # False to generate 2 separate drill files (one for plated holes, one for non plated holes)
         # True to generate only one drill file
@@ -209,7 +220,7 @@ def pasteDxfExport(board, plotDir):
     popt.SetAutoScale(False)
     popt.SetScale(1)
     popt.SetMirror(False)
-    popt.SetExcludeEdgeLayer(True)
+    setExcludeEdgeLayer(popt, True)
     popt.SetScale(1)
     popt.SetDXFPlotUnits(DXF_UNITS_MILLIMETERS)
     popt.SetDXFPlotPolygonMode(False)

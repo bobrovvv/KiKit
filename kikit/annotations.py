@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Dict, List, Set, Union
 import numpy as np
-import pcbnew
+from pcbnewTransition import pcbnew
 from kikit import units # type: ignore
 
 from kikit.common import fromMm, readParameterList
@@ -37,8 +37,8 @@ class TabAnnotation(KiKitAnnotation):
     @staticmethod
     def fromFootprint(footprint):
         origin = footprint.GetPosition()
-        radOrientaion = footprint.GetOrientationRadians()
-        direction = (np.cos(radOrientaion), -np.sin(radOrientaion))
+        radOrientation = footprint.GetOrientation().AsRadians()
+        direction = (np.cos(radOrientation), -np.sin(radOrientation))
         props = readKiKitProps(footprint)
         width = units.readLength(props["width"])
         return TabAnnotation(footprint.GetReference(), origin, direction, width)
@@ -90,7 +90,7 @@ class AnnotationReader:
     def convertToAnnotation(self, footprint: pcbnew.FOOTPRINT) -> List[KiKitAnnotation]:
         """
         Given a footprint, convert it into an annotation. One footprint might
-        represent a zero or multiple annotations, so this function returns a list.
+        represent zero or multiple annotations, so this function returns a list.
         """
         info = footprint.GetFPID()
         lib = str(info.GetLibNickname())
@@ -104,8 +104,15 @@ class AnnotationReader:
 
     @staticmethod
     def getDefault() -> AnnotationReader:
+        """
+        Return AnnotationReader object initialized with default annotations registered
+        """
         r = AnnotationReader()
         r.registerTab("kikit", "Tab")
         r.registerBoard("kikit", "Board")
+
+        # Since KiCAD 7.0 the plugins installed via the Plugin and Content Manager get prepended with `PCM_`
+        r.registerTab("PCM_kikit", "Tab")
+        r.registerBoard("PCM_kikit", "Board")
         return r
 
