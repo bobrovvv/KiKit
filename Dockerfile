@@ -1,7 +1,7 @@
 ARG REPO=ubuntu
 FROM $REPO:22.04 AS base
 
-ARG KICAD_VERSION="6.0"
+ARG KICAD_VERSION="7.0"
 ARG ADDITIONAL_PACKAGES
 ARG ADDITIONAL_PYTHON_PACKAGES
 
@@ -61,6 +61,4 @@ COPY --from=build \
 COPY --from=build \
     /usr/local/bin \
     /usr/local/bin
-
-ENTRYPOINT [ "/usr/local/bin/kikit" ]
-WORKDIR "/kikit"
+CMD ["bash"]
