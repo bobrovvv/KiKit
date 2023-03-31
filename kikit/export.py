@@ -27,14 +27,14 @@ rezonitGerberPlotPlan = [
 exportSettingsRezonit = {
     "UseGerberProtelExtensions": False,
     "UseAuxOrigin": True,
-    "ExcludeEdgeLayer": True,
+    "ExcludeEdgeLayer": False,
     "MinimalHeader": False,
     "NoSuffix": False,
     "MergeNPTH": True,
     "ZerosFormat": GENDRILL_WRITER_BASE.DECIMAL_FORMAT,
-    "SubstractMaskFromSilk": False,
+    "SubstractMaskFromSilk": True,
     "CreateGerberJobFile": False,
-    "SetUseGerberX2format": True,
+    "SetUseGerberX2format": False,
     "GenDrlMapPDF": False,
     "GenDrlReport": False
 }
@@ -271,12 +271,12 @@ def assemblyDrawingExport(boardfile, outputdir):
     popt = pctl.GetPlotOptions()
 
     popt.SetOutputDirectory(os.path.abspath(plotDir))
-    popt.SetAutoScale(True)
+    popt.SetAutoScale(False)
     popt.SetA4Output(True)
     popt.SetPlotFrameRef(True)
     #popt.SetScale(1)
     popt.SetMirror(False)
-    setExcludeEdgeLayer(popt, False)
+    setExcludeEdgeLayer(popt, True)
 
     plot_plan = [
         # name, id, comment
