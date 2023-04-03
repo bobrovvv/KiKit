@@ -21,15 +21,15 @@ rezonitGerberPlotPlan = [
     ("MaskBottom", B_Mask, "Mask bottom"),
     ("MaskTop", F_Mask, "Mask top"),
     ("EdgeCuts", Edge_Cuts, "Edges"),
-    ("CmtUser", Cmts_User, "V-CUT")
+    ("DwgsUser", Dwgs_User, "V-CUT")
 ]
 
 exportSettingsRezonit = {
     "UseGerberProtelExtensions": False,
     "UseAuxOrigin": True,
-    "ExcludeEdgeLayer": False,
+    "ExcludeEdgeLayer": True,
     "MinimalHeader": False,
-    "NoSuffix": False,
+    "NoSuffix": True,
     "MergeNPTH": True,
     "ZerosFormat": GENDRILL_WRITER_BASE.DECIMAL_FORMAT,
     "SubstractMaskFromSilk": True,
@@ -50,12 +50,12 @@ fullGerberPlotPlan = [
     ("MaskBottom", B_Mask, "Mask bottom"),
     ("MaskTop", F_Mask, "Mask top"),
     ("EdgeCuts", Edge_Cuts, "Edges"),
-    ("CmtUser", Cmts_User, "V-CUT")
+    ("DwgsUser", Dwgs_User, "V-CUT")
 ]
 
 exportSettingsJlcpcb = {
     "UseGerberProtelExtensions": True,
-    "UseAuxOrigin": True,
+    "UseAuxOrigin": False,
     "ExcludeEdgeLayer": True,
     "MinimalHeader": False,
     "NoSuffix": False,
@@ -104,7 +104,7 @@ def setExcludeEdgeLayer(plotOptions, excludeEdge):
         else:
             plotOptions.SetLayerSelection(LSET(Layer.Edge_Cuts))
 
-def gerberImpl(boardfile, outputdir, plot_plan=fullGerberPlotPlan, drilling=True, settings=exportSettingsJlcpcb):
+def gerberImpl(boardfile, outputdir, plot_plan=fullGerberPlotPlan, drilling=True, settings=exportSettingsRezonit):
     """
     Export board to gerbers.
 
@@ -274,9 +274,9 @@ def assemblyDrawingExport(boardfile, outputdir):
     popt.SetAutoScale(False)
     popt.SetA4Output(True)
     popt.SetPlotFrameRef(True)
-    #popt.SetScale(1)
+    popt.SetScale(1)
     popt.SetMirror(False)
-    setExcludeEdgeLayer(popt, True)
+    setExcludeEdgeLayer(popt, False)
 
     plot_plan = [
         # name, id, comment
@@ -354,7 +354,7 @@ def renderBoardsExport(board, outputDirectory):
         boardBack = os.path.join(dirPrefix, boardName + "-back.png")
         # boardFrontRend = os.path.join(dirPrefix, boardName + "render-front.png")
         # boardBackRend = os.path.join(dirPrefix, boardName + "render-back.png")
-        subprocess.check_call([pcbdraw, "plot", "--vcuts", "Cmts_User", "--silent", "--side", "front", board, os.path.join(outputDirectory, boardFront)])
-        subprocess.check_call([pcbdraw, "plot",  "--vcuts", "Cmts_User", "--silent", "--side", "back", board, os.path.join(outputDirectory, boardBack)])
+        subprocess.check_call([pcbdraw, "plot", "--vcuts", "Dwgs_User", "--silent", "--side", "front", board, os.path.join(outputDirectory, boardFront)])
+        subprocess.check_call([pcbdraw, "plot",  "--vcuts", "Dwgs_User", "--silent", "--side", "back", board, os.path.join(outputDirectory, boardBack)])
         # subprocess.check_call([pcbdraw, "render", "--renderer", "normal", "--projection", "orthographic", "--transparent", "--side", "front", board, os.path.join(outputDirectory, boardFrontRend)])
         # subprocess.check_call([pcbdraw, "render",  "--renderer", "normal", "--projection", "orthographic", "--transparent", "--side", "back", board, os.path.join(outputDirectory, boardBackRend)])
