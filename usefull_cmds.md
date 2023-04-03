@@ -8,11 +8,11 @@ docker build . -t kikit-rezonit:v1.3.0-v7
 - Current project folder mount to `/prj`
 #### Windows
 ```
-docker run -it -v %cd%:/prj kikit-rezonit:v1.3.0-v7
+docker run -it -v %cd%:/prj -w /prj kikit-rezonit:v1.3.0-v7
 ```
 #### MAC
 ```
-docker run -it -v $(pwd):/prj kikit-rezonit:v1.3.0-v7
+docker run -it -v $(pwd):/prj -w /prj kikit-rezonit:v1.3.0-v7
 ```
 
 ## Save image to tar
