@@ -29,7 +29,7 @@ exportSettingsRezonit = {
     "UseAuxOrigin": True,
     "ExcludeEdgeLayer": True,
     "MinimalHeader": False,
-    "NoSuffix": True,
+    "NoSuffix": False,
     "MergeNPTH": True,
     "ZerosFormat": GENDRILL_WRITER_BASE.DECIMAL_FORMAT,
     "SubstractMaskFromSilk": True,
@@ -104,7 +104,7 @@ def setExcludeEdgeLayer(plotOptions, excludeEdge):
         else:
             plotOptions.SetLayerSelection(LSET(Layer.Edge_Cuts))
 
-def gerberImpl(boardfile, outputdir, plot_plan=fullGerberPlotPlan, drilling=True, settings=exportSettingsRezonit):
+def gerberImpl(boardfile, outputdir, plot_plan=rezonitGerberPlotPlan, drilling=True, settings=exportSettingsRezonit):
     """
     Export board to gerbers.
 
@@ -271,12 +271,12 @@ def assemblyDrawingExport(boardfile, outputdir):
     popt = pctl.GetPlotOptions()
 
     popt.SetOutputDirectory(os.path.abspath(plotDir))
-    popt.SetAutoScale(False)
+    popt.SetAutoScale(True)
     popt.SetA4Output(True)
     popt.SetPlotFrameRef(True)
-    popt.SetScale(1)
+    #popt.SetScale(1)
     popt.SetMirror(False)
-    setExcludeEdgeLayer(popt, False)
+    setExcludeEdgeLayer(popt, True)
 
     plot_plan = [
         # name, id, comment
